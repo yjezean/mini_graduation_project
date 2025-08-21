@@ -10,6 +10,22 @@
       class="flex transition-transform duration-500 ease-in-out"
       :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
     >
+      <!-- Clone of last image at the beginning -->
+      <div 
+        v-if="images.length > 1"
+        class="min-w-full flex-shrink-0 relative"
+      >
+        <img 
+          :src="images[images.length - 1].src" 
+          :alt="images[images.length - 1].alt"
+          class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
+          @click="openModal(images[images.length - 1])"
+          @load="onImageLoad"
+          @error="onImageError"
+        />
+      </div>
+      
+      <!-- Original images -->
       <div 
         v-for="(image, index) in images" 
         :key="image.id"
@@ -24,13 +40,28 @@
           @error="onImageError"
         />
       </div>
+      
+      <!-- Clone of first image at the end -->
+      <div 
+        v-if="images.length > 1"
+        class="min-w-full flex-shrink-0 relative"
+      >
+        <img 
+          :src="images[0].src" 
+          :alt="images[0].alt"
+          class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
+          @click="openModal(images[0])"
+          @load="onImageLoad"
+          @error="onImageError"
+        />
+      </div>
     </div>
 
     <!-- Navigation Buttons - Hidden on mobile -->
     <button 
       v-if="showNavigation && images.length > 1"
       class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 hidden md:block z-10"
-      @click="previous"
+      @click="handlePrevious"
       aria-label="Previous image"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +72,7 @@
     <button 
       v-if="showNavigation && images.length > 1"
       class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 hidden md:block z-10"
-      @click="next"
+      @click="handleNext"
       aria-label="Next image"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,8 +89,8 @@
         v-for="(_, index) in images"
         :key="index"
         class="w-3 h-3 rounded-full transition-colors duration-200"
-        :class="index === currentIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/75'"
-        @click="goTo(index)"
+        :class="getActualIndex() === index ? 'bg-white' : 'bg-white/50 hover:bg-white/75'"
+        @click="handleGoTo(index)"
         :aria-label="`Go to image ${index + 1}`"
       />
     </div>
@@ -67,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useCarousel } from '@/composables/useCarousel'
 import type { CarouselImage } from '@/types'
 
@@ -84,7 +115,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  autoPlay: true,
+  autoPlay: false, // Disabled auto-play by default
   interval: 3000,
   showNavigation: true,
   showIndicators: true,
@@ -98,6 +129,8 @@ const {
   next,
   previous,
   goTo,
+  startAutoPlay,
+  stopAutoPlay,
   toggleAutoPlay,
 } = useCarousel(props.images, props.autoPlay, props.interval)
 
@@ -105,6 +138,43 @@ const {
 const touchStartX = ref(0)
 const touchEndX = ref(0)
 const isDragging = ref(false)
+
+// Infinite loop handling
+const isTransitioning = ref(false)
+
+const getActualIndex = () => {
+  if (props.images.length <= 1) return 0
+  if (currentIndex.value === 0) return props.images.length - 1
+  if (currentIndex.value === props.images.length + 1) return 0
+  return currentIndex.value - 1
+}
+
+const handleNext = () => {
+  if (props.images.length <= 1) return
+  currentIndex.value++
+  // If we're at the cloned first image, instantly jump to real first image
+  if (currentIndex.value === props.images.length + 1) {
+    setTimeout(() => {
+      currentIndex.value = 1
+    }, 500)
+  }
+}
+
+const handlePrevious = () => {
+  if (props.images.length <= 1) return
+  currentIndex.value--
+  // If we're at the cloned last image, instantly jump to real last image
+  if (currentIndex.value === 0) {
+    setTimeout(() => {
+      currentIndex.value = props.images.length
+    }, 500)
+  }
+}
+
+const handleGoTo = (index: number) => {
+  if (props.images.length <= 1) return
+  currentIndex.value = index + 1
+}
 
 const handleTouchStart = (e: TouchEvent) => {
   touchStartX.value = e.touches[0].clientX
@@ -127,10 +197,10 @@ const handleTouchEnd = () => {
   if (Math.abs(diff) > swipeThreshold) {
     if (diff > 0) {
       // Swipe left - next image
-      next()
+      handleNext()
     } else {
       // Swipe right - previous image
-      previous()
+      handlePrevious()
     }
   }
   
@@ -149,6 +219,11 @@ const onImageLoad = (event: Event) => {
 const onImageError = (event: Event) => {
   const img = event.target as HTMLImageElement
   img.src = '/placeholder-image.jpg'
+}
+
+// Initialize the carousel to start at the first real image (index 1)
+if (props.images.length > 1) {
+  currentIndex.value = 1
 }
 </script>
 

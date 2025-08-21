@@ -6,23 +6,27 @@ export function useCarousel(
   autoPlay = true,
   interval = 3000
 ) {
-  const currentIndex = ref(0)
+  const currentIndex = ref(1) // Start at index 1 for infinite loop
   const isPlaying = ref(autoPlay)
   let autoPlayTimer: NodeJS.Timeout | null = null
 
+  // These functions will be overridden by the component's infinite loop handlers
   const next = () => {
-    currentIndex.value = (currentIndex.value + 1) % images.length
+    // This will be replaced by handleNext in the component
+    currentIndex.value = (currentIndex.value + 1) % (images.length + 2)
   }
 
   const previous = () => {
-    currentIndex.value = currentIndex.value === 0 
-      ? images.length - 1 
+    // This will be replaced by handlePrevious in the component
+    currentIndex.value = currentIndex.value === 0
+      ? images.length + 1
       : currentIndex.value - 1
   }
 
   const goTo = (index: number) => {
+    // This will be replaced by handleGoTo in the component
     if (index >= 0 && index < images.length) {
-      currentIndex.value = index
+      currentIndex.value = index + 1 // Adjust for infinite loop indexing
     }
   }
 
@@ -30,7 +34,11 @@ export function useCarousel(
     if (autoPlay && images.length > 1) {
       stopAutoPlay()
       autoPlayTimer = setInterval(() => {
-        next()
+        // Use the component's handleNext function
+        if (typeof window !== 'undefined') {
+          // Trigger a custom event that the component can listen to
+          window.dispatchEvent(new CustomEvent('carousel-next'))
+        }
       }, interval)
       isPlaying.value = true
     }
