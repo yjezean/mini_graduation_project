@@ -18,6 +18,14 @@
     <!-- Main Content with Button -->
     <main class="py-16">
       <div class="container text-center">
+        <!-- Message from 站主ez -->
+        <div class="mb-12 p-8 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">🗣️ 站主ez的祝福 🗣️</h3>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            🌟 祝你未来一切顺利，👨‍🦲 头发少掉一点，💪 肝永远健康！
+          </p>
+        </div>
+        
         <button 
           @click="openMessageModal"
           class="btn-primary text-lg px-8 py-4 text-xl font-semibold mb-8"

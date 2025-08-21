@@ -7,42 +7,37 @@ export interface Entry {
 export const entries: Entry[] = [
     {
         id: '1',
-        title: 'Welcome Message',
-        message: 'Welcome to our beautiful Vue.js carousel website! This is a simple and elegant design showcasing modern web development practices.'
+        title: 'AKA Wj',
+        message: '老郑终于毕业啦  是时候组trip去2天1夜玩了'
     },
     {
         id: '2',
-        title: 'About Vue.js',
-        message: 'Vue.js is a progressive JavaScript framework for building user interfaces. It is designed to be incrementally adoptable and focuses on the view layer.'
+        title: 'Chang Xi',
+        message: '国胜，毕业快乐，祝你前途似锦，未来一帆风顺！'
     },
     {
         id: '3',
-        title: 'Carousel Features',
-        message: 'This carousel features smooth transitions, auto-play functionality, navigation controls, and image zoom capabilities for an enhanced user experience.'
+        title: '帅哥zy',
+        message: '毕业了吗bro！ 很可惜我不能到场！真的对不起！！！but 记得video call 我 happy graduation bro!'
     },
     {
         id: '4',
-        title: 'Modern Development',
-        message: 'Built with TypeScript, UnoCSS, and Vue 3 Composition API, this project demonstrates modern web development best practices and clean code architecture.'
+        title: 'Teck Lee',
+        message: 'Congratulations bro 🎉, 毕业快乐 ，wish u all the best✌'
     },
     {
         id: '5',
-        title: 'Responsive Design',
-        message: 'The website is fully responsive and works perfectly on all devices including mobile phones, tablets, and desktop computers.'
+        title: 'Sing 仔',
+        message: '哟！老郑！！！！毕业了了咯！！！祝你找到想要的工作和薪资 永远支持你 ❤️❤️'
     },
     {
         id: '6',
-        title: 'Image Gallery',
-        message: 'Click on any image in the carousel to view it in full size with our beautiful modal overlay. Perfect for showcasing your photography or artwork.'
+        title: 'Gao Yee ',
+        message: '毕业快乐'
     },
     {
         id: '7',
-        title: 'Performance Optimized',
-        message: 'Built with Vite for fast development and optimized builds. The carousel uses efficient rendering and smooth animations for the best performance.'
+        title: 'Yu Xuan',
+        message: '毕业快乐！！！！！！',
     },
-    {
-        id: '8',
-        title: 'Accessibility First',
-        message: 'This website is built with accessibility in mind, featuring proper ARIA labels, keyboard navigation, and screen reader support.'
-    }
 ]
