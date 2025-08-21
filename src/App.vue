@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
-    <!-- Header Section -->
+    <!-- Header Section with Carousel -->
     <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
       <div class="container py-8">
         <div class="text-center mb-8">
@@ -8,118 +8,46 @@
             Vue Carousel Website
           </h1>
           <p class="text-xl opacity-90">
-            Professional image carousels with zoom functionality
+            Professional image carousel with information button
           </p>
         </div>
         
-        <!-- Header Carousel -->
+        <!-- Single Carousel -->
         <ImageCarousel 
           :images="headerImages"
           :auto-play="true"
           :interval="4000"
           :show-navigation="true"
           :show-indicators="true"
-          @image-click="openModal"
+          @image-click="openImageModal"
         />
       </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Main Content with Button -->
     <main class="py-16">
-      <div class="container">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Welcome to Our Website
-          </h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            This is a beautiful Vue.js website featuring two stunning image carousels. 
-            The header carousel showcases our featured images, while the footer carousel 
-            displays additional content. Click on any image to view it in full size!
-          </p>
-        </div>
-        
-        <!-- Features Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <div class="card text-center">
-            <div class="text-4xl mb-4">🖼️</div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-3">
-              Image Carousels
-            </h3>
-            <p class="text-gray-600">
-              Two beautiful carousels that automatically cycle through images with smooth transitions
-            </p>
-          </div>
-          
-          <div class="card text-center">
-            <div class="text-4xl mb-4">📱</div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-3">
-              Mobile Responsive
-            </h3>
-            <p class="text-gray-600">
-              Fully responsive design that works perfectly on all devices and screen sizes
-            </p>
-          </div>
-          
-          <div class="card text-center">
-            <div class="text-4xl mb-4">🔍</div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-3">
-              Image Zoom
-            </h3>
-            <p class="text-gray-600">
-              Click any image to view it in full size with a beautiful modal overlay
-            </p>
-          </div>
-        </div>
-
-        <!-- Additional Content -->
-        <div class="bg-white rounded-lg shadow-md p-8">
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">
-            About This Project
-          </h3>
-          <p class="text-gray-600 mb-4">
-            This Vue.js website demonstrates modern web development practices with:
-          </p>
-          <ul class="list-disc list-inside text-gray-600 space-y-2">
-            <li>Vue 3 Composition API with TypeScript</li>
-            <li>UnoCSS for utility-first styling</li>
-            <li>Reusable composables and components</li>
-            <li>Professional project structure</li>
-            <li>Mobile-first responsive design</li>
-            <li>Accessibility features</li>
-          </ul>
-        </div>
+      <div class="container text-center">
+        <button 
+          @click="openMessageModal"
+          class="btn-primary text-lg px-8 py-4 text-xl font-semibold"
+        >
+          📖 Read Information Entries
+        </button>
       </div>
     </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-gradient-to-r from-pink-500 to-red-500 text-white">
-      <div class="container py-8">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">
-            Gallery
-          </h2>
-          <p class="text-xl opacity-90">
-            Explore our collection of beautiful images
-          </p>
-        </div>
-        
-        <!-- Footer Carousel -->
-        <ImageCarousel 
-          :images="footerImages"
-          :auto-play="true"
-          :interval="3500"
-          :show-navigation="true"
-          :show-indicators="true"
-          @image-click="openModal"
-        />
-      </div>
-    </footer>
-
     <!-- Image Modal -->
     <ImageModal 
-      :is-open="isModalOpen"
+      :is-open="isImageModalOpen"
       :image="selectedImage"
-      :on-close="closeModal"
+      :on-close="closeImageModal"
+    />
+
+    <!-- Message Modal -->
+    <MessageModal 
+      :is-open="isMessageModalOpen"
+      :entries="entries"
+      :on-close="closeMessageModal"
     />
   </div>
 </template>
@@ -128,20 +56,31 @@
 import { ref } from 'vue'
 import { ImageCarousel } from '@/components/ImageCarousel'
 import { ImageModal } from '@/components/ImageModal'
-import { headerImages, footerImages } from '@/data/images'
+import { MessageModal } from '@/components/MessageModal'
+import { headerImages } from '@/data/images'
+import { entries } from '@/data/entries'
 import type { CarouselImage } from '@/types'
 
-const isModalOpen = ref(false)
+const isImageModalOpen = ref(false)
+const isMessageModalOpen = ref(false)
 const selectedImage = ref<CarouselImage | null>(null)
 
-const openModal = (image: CarouselImage) => {
+const openImageModal = (image: CarouselImage) => {
   selectedImage.value = image
-  isModalOpen.value = true
+  isImageModalOpen.value = true
 }
 
-const closeModal = () => {
-  isModalOpen.value = false
+const closeImageModal = () => {
+  isImageModalOpen.value = false
   selectedImage.value = null
+}
+
+const openMessageModal = () => {
+  isMessageModalOpen.value = true
+}
+
+const closeMessageModal = () => {
+  isMessageModalOpen.value = false
 }
 </script>
 
