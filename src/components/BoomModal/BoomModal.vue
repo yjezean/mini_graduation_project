@@ -8,13 +8,11 @@
       <div class="relative max-w-4xl max-h-[90vh] p-4">
         <!-- Close Button -->
         <button
-          class="absolute top-4 right-4 z-10 bg-red-500 hover:bg-red-600 text-white p-3 rounded-full transition-colors duration-200 shadow-lg"
+          class="absolute top-4 right-4 bg-transparent border-none z-10 text-black p-2 transition-colors duration-200 hover:text-gray-600"
           @click="onClose"
           aria-label="Close surprise modal"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon icon="mdi:close" class="w-5 h-5" />
         </button>
 
         <!-- Surprise Content -->
@@ -24,7 +22,7 @@
         >
           <!-- Surprise Header -->
           <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-4 text-center">
-            <h2 class="text-2xl font-bold mb-2">🎉 SURPRISE! 🎉</h2>
+            <h2 class="text-2xl font-bold mb-2">SURPRISE!</h2>
             <p class="text-lg opacity-90">You found a hidden treasure! Swipe to explore more!</p>
             <div class="text-sm opacity-75 mt-2">
               {{ getActualIndex() + 1 }} of {{ totalImages }}
@@ -99,15 +97,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Sparkle Effects -->
-        <div class="absolute inset-0 pointer-events-none">
-          <div class="sparkle sparkle-1">✨</div>
-          <div class="sparkle sparkle-2">⭐</div>
-          <div class="sparkle sparkle-3">💫</div>
-          <div class="sparkle sparkle-4">🌟</div>
-          <div class="sparkle sparkle-5">🎊</div>
-        </div>
       </div>
     </div>
   </Transition>
@@ -115,6 +104,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import { Icon } from '@iconify/vue'
 import type { BoomImage } from '@/data/boomImages'
 import { boomImages } from '@/data/boomImages'
 
@@ -242,73 +232,23 @@ watch(() => props.image, (newImage) => {
 <style scoped>
 .boom-modal-enter-active,
 .boom-modal-leave-active {
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 .boom-modal-enter-from,
 .boom-modal-leave-to {
   opacity: 0;
-  transform: scale(0.8) rotate(-5deg);
+  transform: scale(0.9);
 }
 
 .boom-modal-enter-active .relative,
 .boom-modal-leave-active .relative {
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
 }
 
 .boom-modal-enter-from .relative,
 .boom-modal-leave-to .relative {
-  transform: scale(0.9) rotate(5deg);
-}
-
-/* Sparkle Animation */
-.sparkle {
-  position: absolute;
-  font-size: 2rem;
-  animation: sparkle 2s ease-in-out infinite;
-  opacity: 0;
-}
-
-.sparkle-1 {
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.sparkle-2 {
-  top: 30%;
-  right: 15%;
-  animation-delay: 0.4s;
-}
-
-.sparkle-3 {
-  bottom: 30%;
-  left: 20%;
-  animation-delay: 0.8s;
-}
-
-.sparkle-4 {
-  bottom: 20%;
-  right: 10%;
-  animation-delay: 1.2s;
-}
-
-.sparkle-5 {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: 1.6s;
-}
-
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0) rotate(0deg);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1) rotate(180deg);
-  }
+  transform: scale(0.95);
 }
 </style>
 
