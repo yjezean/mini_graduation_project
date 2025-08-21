@@ -23,17 +23,6 @@
           @load="onImageLoad"
           @error="onImageError"
         />
-        <div 
-          v-if="image.title || image.description"
-          class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white"
-        >
-          <h3 v-if="image.title" class="text-lg font-semibold mb-1">
-            {{ image.title }}
-          </h3>
-          <p v-if="image.description" class="text-sm opacity-90">
-            {{ image.description }}
-          </p>
-        </div>
       </div>
     </div>
 
