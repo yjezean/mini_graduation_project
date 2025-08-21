@@ -27,7 +27,7 @@
             <h2 class="text-2xl font-bold mb-2">🎉 SURPRISE! 🎉</h2>
             <p class="text-lg opacity-90">You found a hidden treasure! Swipe to explore more!</p>
             <div class="text-sm opacity-75 mt-2">
-              {{ currentIndex + 1 }} of {{ totalImages }}
+              {{ getActualIndex() + 1 }} of {{ totalImages }}
             </div>
           </div>
 
@@ -43,9 +43,24 @@
             @mouseleave="handleMouseUp"
           >
             <div 
-              class="flex transition-transform duration-300 ease-out"
+              class="flex transition-transform duration-500 ease-in-out"
               :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
             >
+              <!-- Clone of last image at the beginning -->
+              <div 
+                v-if="allImages.length > 1"
+                class="min-w-full flex-shrink-0 relative"
+              >
+                <img 
+                  :src="allImages[allImages.length - 1].src" 
+                  :alt="allImages[allImages.length - 1].alt"
+                  class="w-full h-80 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px] object-contain"
+                  @load="onImageLoad"
+                  @error="onImageError"
+                />
+              </div>
+              
+              <!-- Original images -->
               <div 
                 v-for="(image, index) in allImages" 
                 :key="image.id"
@@ -54,17 +69,24 @@
                 <img 
                   :src="image.src" 
                   :alt="image.alt"
-                  class="w-full max-h-[70vh] object-contain"
+                  class="w-full h-80 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px] object-contain"
                   @load="onImageLoad"
                   @error="onImageError"
                 />
-                
-                <!-- Image Title -->
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                  <h3 class="text-xl font-bold text-white">
-                    {{ image.title }}
-                  </h3>
-                </div>
+              </div>
+              
+              <!-- Clone of first image at the end -->
+              <div 
+                v-if="allImages.length > 1"
+                class="min-w-full flex-shrink-0 relative"
+              >
+                <img 
+                  :src="allImages[0].src" 
+                  :alt="allImages[0].alt"
+                  class="w-full h-80 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px] object-contain"
+                  @load="onImageLoad"
+                  @error="onImageError"
+                />
               </div>
             </div>
 
@@ -75,41 +97,6 @@
             >
               <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-red-500"></div>
             </div>
-          </div>
-
-          <!-- Navigation Buttons -->
-          <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between p-4 pointer-events-none">
-            <button
-              @click="previousImage"
-              class="bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-200 shadow-lg pointer-events-auto"
-              aria-label="Previous image"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            
-            <button
-              @click="nextImage"
-              class="bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-200 shadow-lg pointer-events-auto"
-              aria-label="Next image"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Indicators -->
-          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-            <button
-              v-for="(_, index) in allImages"
-              :key="index"
-              class="w-3 h-3 rounded-full transition-colors duration-200"
-              :class="index === currentIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/75'"
-              @click="goToImage(index)"
-              :aria-label="`Go to image ${index + 1}`"
-            />
           </div>
         </div>
 
@@ -139,7 +126,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const isLoading = ref(false)
-const currentIndex = ref(0)
+const currentIndex = ref(1) // Start at index 1 for infinite loop
 const touchStartX = ref(0)
 const touchEndX = ref(0)
 const isDragging = ref(false)
@@ -149,32 +136,41 @@ const dragOffset = ref(0)
 const allImages = computed(() => boomImages)
 const totalImages = computed(() => allImages.value.length)
 
+const getActualIndex = () => {
+  if (allImages.value.length <= 1) return 0
+  if (currentIndex.value === 0) return allImages.value.length - 1
+  if (currentIndex.value === allImages.value.length + 1) return 0
+  return currentIndex.value - 1
+}
+
+const handleNext = () => {
+  if (allImages.value.length <= 1) return
+  currentIndex.value++
+  // If we're at the cloned first image, instantly jump to real first image
+  if (currentIndex.value === allImages.value.length + 1) {
+    setTimeout(() => {
+      currentIndex.value = 1
+    }, 500)
+  }
+}
+
+const handlePrevious = () => {
+  if (allImages.value.length <= 1) return
+  currentIndex.value--
+  // If we're at the cloned last image, instantly jump to real last image
+  if (currentIndex.value === 0) {
+    setTimeout(() => {
+      currentIndex.value = allImages.value.length
+    }, 500)
+  }
+}
+
 const onImageLoad = () => {
   isLoading.value = false
 }
 
 const onImageError = () => {
   isLoading.value = false
-}
-
-const nextImage = () => {
-  if (currentIndex.value < totalImages.value - 1) {
-    currentIndex.value++
-  } else {
-    currentIndex.value = 0 // Circular navigation
-  }
-}
-
-const previousImage = () => {
-  if (currentIndex.value > 0) {
-    currentIndex.value--
-  } else {
-    currentIndex.value = totalImages.value - 1 // Circular navigation
-  }
-}
-
-const goToImage = (index: number) => {
-  currentIndex.value = index
 }
 
 // Touch handlers for mobile swipe
@@ -193,10 +189,10 @@ const handleTouchEnd = () => {
   if (Math.abs(diff) > swipeThreshold) {
     if (diff > 0) {
       // Swipe left - next image
-      nextImage()
+      handleNext()
     } else {
       // Swipe right - previous image
-      previousImage()
+      handlePrevious()
     }
   }
 }
@@ -221,10 +217,10 @@ const handleMouseUp = () => {
     if (Math.abs(dragOffset.value) > swipeThreshold) {
       if (dragOffset.value > 0) {
         // Drag right - previous image
-        previousImage()
+        handlePrevious()
       } else {
         // Drag left - next image
-        nextImage()
+        handleNext()
       }
     }
     
@@ -238,7 +234,7 @@ watch(() => props.image, (newImage) => {
     isLoading.value = true
     // Find the index of the current image
     const index = allImages.value.findIndex(img => img.id === newImage.id)
-    currentIndex.value = index >= 0 ? index : 0
+    currentIndex.value = index >= 0 ? index + 1 : 1
   }
 }, { immediate: true })
 </script>
@@ -315,3 +311,4 @@ watch(() => props.image, (newImage) => {
   }
 }
 </style>
+
