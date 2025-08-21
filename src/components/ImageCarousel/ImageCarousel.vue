@@ -74,21 +74,6 @@
         :aria-label="`Go to image ${index + 1}`"
       />
     </div>
-
-    <!-- Auto-play Toggle -->
-    <button
-      v-if="images.length > 1"
-      class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 z-10"
-      @click="toggleAutoPlay"
-      :aria-label="isPlaying ? 'Pause slideshow' : 'Play slideshow'"
-    >
-      <svg v-if="isPlaying" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6" />
-      </svg>
-      <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    </button>
   </div>
 </template>
 
