@@ -73,15 +73,22 @@
       :image="randomBoomImage"
       :on-close="closeBoomModal"
     />
+
+    <!-- Startup Popup -->
+    <StartupPopup 
+      :is-open="isStartupPopupOpen"
+      :on-close="closeStartupPopup"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ImageCarousel } from '@/components/ImageCarousel'
 import { ImageModal } from '@/components/ImageModal'
 import { MessageModal } from '@/components/MessageModal'
 import { BoomModal } from '@/components/BoomModal'
+import { StartupPopup } from '@/components/StartupPopup'
 import { headerImages } from '@/data/images'
 import { entries } from '@/data/entries'
 import { boomImages, getRandomBoomImageIndex } from '@/data/boomImages'
@@ -91,8 +98,17 @@ import type { BoomImage } from '@/data/boomImages'
 const isImageModalOpen = ref(false)
 const isMessageModalOpen = ref(false)
 const isBoomModalOpen = ref(false)
+const isStartupPopupOpen = ref(false)
 const selectedImage = ref<CarouselImage | null>(null)
 const randomBoomImage = ref<BoomImage | null>(null)
+
+// Show startup popup on page load
+onMounted(() => {
+  // Small delay to ensure page is loaded
+  setTimeout(() => {
+    isStartupPopupOpen.value = true
+  }, 500)
+})
 
 const openImageModal = (image: CarouselImage) => {
   selectedImage.value = image
@@ -121,6 +137,10 @@ const openBoomModal = () => {
 const closeBoomModal = () => {
   isBoomModalOpen.value = false
   randomBoomImage.value = null
+}
+
+const closeStartupPopup = () => {
+  isStartupPopupOpen.value = false
 }
 </script>
 
