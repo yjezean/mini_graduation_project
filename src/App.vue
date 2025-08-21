@@ -22,7 +22,7 @@
           @click="openMessageModal"
           class="btn-primary text-lg px-8 py-4 text-xl font-semibold mb-8"
         >
-          📖 Read Information Entries
+        🗣️ Bro 有话要说！
         </button>
       </div>
     </main>
@@ -31,16 +31,16 @@
     <section class="py-16 bg-gradient-to-r from-pink-100 to-purple-100">
       <div class="container text-center">
         <h2 class="text-3xl font-bold text-gray-800 mb-4">
-          🎁 Ready for a Surprise?
+          🎁 有个礼物给你
         </h2>
         <p class="text-lg text-gray-600 mb-8">
-          Click the button below to discover something amazing!
+          点下面按钮，发现惊喜!
         </p>
         <button 
           @click="openBoomModal"
           class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-lg px-8 py-4 text-xl font-bold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse"
         >
-          🎉 SURPRISE ME! 🎉
+          🎉 点我! 🎉
         </button>
       </div>
     </section>

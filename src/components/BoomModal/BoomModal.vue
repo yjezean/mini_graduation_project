@@ -22,11 +22,8 @@
         >
           <!-- Surprise Header -->
           <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-4 text-center">
-            <h2 class="text-2xl font-bold mb-2">SURPRISE!</h2>
-            <p class="text-lg opacity-90">You found a hidden treasure! Swipe to explore more!</p>
-            <div class="text-sm opacity-75 mt-2">
-              {{ getActualIndex() + 1 }} of {{ totalImages }}
-            </div>
+            <h2 class="text-2xl font-bold mb-2">BRO!</h2>
+            <p class="text-lg opacity-90">哥依然风流倜傥!</p>
           </div>
 
           <!-- Image Container with Swipe -->
