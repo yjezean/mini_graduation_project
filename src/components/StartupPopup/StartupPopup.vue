@@ -19,7 +19,7 @@
         </button>
 
           <img 
-            src="/src/assets/animation/animation.jpg" 
+            :src="animationImage" 
             alt="Graduation Celebration"
             class="w-full h-auto object-cover"
           />
@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+import animationImage from '@/assets/animation/animation.jpg'
 
 interface Props {
   isOpen: boolean
