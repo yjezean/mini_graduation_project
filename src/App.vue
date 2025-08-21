@@ -1,17 +1,8 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Header Section with Carousel -->
-    <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
-      <div class="container py-8">
-        <div class="text-center mb-8">
-          <h1 class="text-4xl md:text-5xl font-bold mb-4">
-            Vue Carousel Website
-          </h1>
-          <p class="text-xl opacity-90">
-            Professional image carousel with information button
-          </p>
-        </div>
-        
+    <header class="bg-transparent text-white">
+      <div class="w-full">
         <!-- Single Carousel -->
         <ImageCarousel 
           :images="headerImages"

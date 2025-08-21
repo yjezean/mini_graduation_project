@@ -1,5 +1,10 @@
 <template>
-  <div class="relative overflow-hidden rounded-lg shadow-lg">
+  <div 
+    class="relative overflow-hidden rounded-lg shadow-lg"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
     <!-- Carousel Container -->
     <div 
       class="flex transition-transform duration-500 ease-in-out"
@@ -13,7 +18,7 @@
         <img 
           :src="image.src" 
           :alt="image.alt"
-          class="w-full h-64 md:h-80 lg:h-96 object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
+          class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
           @click="openModal(image)"
           @load="onImageLoad"
           @error="onImageError"
@@ -32,10 +37,10 @@
       </div>
     </div>
 
-    <!-- Navigation Buttons -->
+    <!-- Navigation Buttons - Hidden on mobile -->
     <button 
       v-if="showNavigation && images.length > 1"
-      class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 hidden md:block z-10"
       @click="previous"
       aria-label="Previous image"
     >
@@ -46,7 +51,7 @@
     
     <button 
       v-if="showNavigation && images.length > 1"
-      class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 hidden md:block z-10"
       @click="next"
       aria-label="Next image"
     >
@@ -55,10 +60,10 @@
       </svg>
     </button>
 
-    <!-- Indicators -->
+    <!-- Indicators - Hidden on mobile -->
     <div 
       v-if="showIndicators && images.length > 1"
-      class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2"
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 hidden md:flex z-10"
     >
       <button
         v-for="(_, index) in images"
@@ -73,7 +78,7 @@
     <!-- Auto-play Toggle -->
     <button
       v-if="images.length > 1"
-      class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+      class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200 z-10"
       @click="toggleAutoPlay"
       :aria-label="isPlaying ? 'Pause slideshow' : 'Play slideshow'"
     >
@@ -88,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useCarousel } from '@/composables/useCarousel'
 import type { CarouselImage } from '@/types'
 
@@ -120,6 +126,42 @@ const {
   goTo,
   toggleAutoPlay,
 } = useCarousel(props.images, props.autoPlay, props.interval)
+
+// Touch/swipe functionality
+const touchStartX = ref(0)
+const touchEndX = ref(0)
+const isDragging = ref(false)
+
+const handleTouchStart = (e: TouchEvent) => {
+  touchStartX.value = e.touches[0].clientX
+  isDragging.value = true
+}
+
+const handleTouchMove = (e: TouchEvent) => {
+  if (!isDragging.value) return
+  
+  e.preventDefault() // Prevent default touch behavior
+  touchEndX.value = e.touches[0].clientX
+}
+
+const handleTouchEnd = () => {
+  if (!isDragging.value) return
+  
+  const swipeThreshold = 50
+  const diff = touchStartX.value - touchEndX.value
+
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Swipe left - next image
+      next()
+    } else {
+      // Swipe right - previous image
+      previous()
+    }
+  }
+  
+  isDragging.value = false
+}
 
 const openModal = (image: CarouselImage) => {
   emit('image-click', image)
