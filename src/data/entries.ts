@@ -40,4 +40,9 @@ export const entries: Entry[] = [
         title: 'Yu Xuan',
         message: '毕业快乐！！！！！！',
     },
+    {
+        id: '8',
+        title: 'shan ying',
+        message: 'Hello, how are you',
+    },
 ]
