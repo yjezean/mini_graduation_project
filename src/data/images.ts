@@ -2,32 +2,39 @@ import type { CarouselImage } from '@/types'
 
 export const headerImages: CarouselImage[] = [
   {
-    id: 'header-1',
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop',
-    alt: 'Mountain Landscape',
-    title: 'Mountain Landscape',
-    description: 'Breathtaking mountain views at sunset'
+    id: 'carousel-1',
+    src: '/src/assets/carousel_pic/normal_1.jpg',
+    alt: 'Carousel Image 1',
+    title: 'Beautiful Image 1',
+    description: 'First image from the carousel collection'
   },
   {
-    id: 'header-2',
-    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=600&fit=crop',
-    alt: 'Forest Path',
-    title: 'Forest Path',
-    description: 'Peaceful forest trail through nature'
+    id: 'carousel-2',
+    src: '/src/assets/carousel_pic/normal_2.jpg',
+    alt: 'Carousel Image 2',
+    title: 'Beautiful Image 2',
+    description: 'Second image from the carousel collection'
   },
   {
-    id: 'header-3',
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop',
-    alt: 'Ocean Waves',
-    title: 'Ocean Waves',
-    description: 'Powerful waves crashing on the shore'
+    id: 'carousel-3',
+    src: '/src/assets/carousel_pic/normla_3.jpg',
+    alt: 'Carousel Image 3',
+    title: 'Beautiful Image 3',
+    description: 'Third image from the carousel collection'
   },
   {
-    id: 'header-4',
-    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=600&fit=crop',
-    alt: 'Sunset Sky',
-    title: 'Sunset Sky',
-    description: 'Beautiful sunset over the horizon'
+    id: 'carousel-4',
+    src: '/src/assets/carousel_pic/normal_4.jpg',
+    alt: 'Carousel Image 4',
+    title: 'Beautiful Image 4',
+    description: 'Fourth image from the carousel collection'
+  },
+  {
+    id: 'carousel-5',
+    src: '/src/assets/carousel_pic/normal_5.jpg',
+    alt: 'Carousel Image 5',
+    title: 'Beautiful Image 5',
+    description: 'Fifth image from the carousel collection'
   }
 ]
 

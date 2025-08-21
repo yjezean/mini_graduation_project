@@ -29,12 +29,30 @@
       <div class="container text-center">
         <button 
           @click="openMessageModal"
-          class="btn-primary text-lg px-8 py-4 text-xl font-semibold"
+          class="btn-primary text-lg px-8 py-4 text-xl font-semibold mb-8"
         >
           📖 Read Information Entries
         </button>
       </div>
     </main>
+
+    <!-- Surprise Section -->
+    <section class="py-16 bg-gradient-to-r from-pink-100 to-purple-100">
+      <div class="container text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">
+          🎁 Ready for a Surprise?
+        </h2>
+        <p class="text-lg text-gray-600 mb-8">
+          Click the button below to discover something amazing!
+        </p>
+        <button 
+          @click="openBoomModal"
+          class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-lg px-8 py-4 text-xl font-bold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse"
+        >
+          🎉 SURPRISE ME! 🎉
+        </button>
+      </div>
+    </section>
 
     <!-- Image Modal -->
     <ImageModal 
@@ -49,6 +67,13 @@
       :entries="entries"
       :on-close="closeMessageModal"
     />
+
+    <!-- Boom Modal -->
+    <BoomModal 
+      :is-open="isBoomModalOpen"
+      :image="randomBoomImage"
+      :on-close="closeBoomModal"
+    />
   </div>
 </template>
 
@@ -57,13 +82,18 @@ import { ref } from 'vue'
 import { ImageCarousel } from '@/components/ImageCarousel'
 import { ImageModal } from '@/components/ImageModal'
 import { MessageModal } from '@/components/MessageModal'
+import { BoomModal } from '@/components/BoomModal'
 import { headerImages } from '@/data/images'
 import { entries } from '@/data/entries'
+import { boomImages, getRandomBoomImageIndex } from '@/data/boomImages'
 import type { CarouselImage } from '@/types'
+import type { BoomImage } from '@/data/boomImages'
 
 const isImageModalOpen = ref(false)
 const isMessageModalOpen = ref(false)
+const isBoomModalOpen = ref(false)
 const selectedImage = ref<CarouselImage | null>(null)
+const randomBoomImage = ref<BoomImage | null>(null)
 
 const openImageModal = (image: CarouselImage) => {
   selectedImage.value = image
@@ -81,6 +111,17 @@ const openMessageModal = () => {
 
 const closeMessageModal = () => {
   isMessageModalOpen.value = false
+}
+
+const openBoomModal = () => {
+  const randomIndex = getRandomBoomImageIndex()
+  randomBoomImage.value = boomImages[randomIndex]
+  isBoomModalOpen.value = true
+}
+
+const closeBoomModal = () => {
+  isBoomModalOpen.value = false
+  randomBoomImage.value = null
 }
 </script>
 
