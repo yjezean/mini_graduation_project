@@ -8,13 +8,11 @@
       <div class="relative max-w-7xl max-h-full p-4">
         <!-- Close Button -->
         <button
-          class="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+          class="absolute top-4 right-4 bg-transparent border-none z-10 text-white p-2 transition-colors duration-200 hover:text-gray-600"
           @click="onClose"
-          aria-label="Close modal"
+          aria-label="Close image modal"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon icon="mdi:close" class="w-5 h-5" />
         </button>
 
         <!-- Image Container -->
@@ -30,19 +28,6 @@
             @load="onImageLoad"
             @error="onImageError"
           />
-          
-          <!-- Image Info -->
-          <div 
-            v-if="image && (image.title || image.description)"
-            class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white rounded-b-lg"
-          >
-            <h2 v-if="image.title" class="text-2xl font-bold mb-2">
-              {{ image.title }}
-            </h2>
-            <p v-if="image.description" class="text-lg opacity-90">
-              {{ image.description }}
-            </p>
-          </div>
         </div>
 
         <!-- Loading Spinner -->
@@ -59,6 +44,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { Icon } from '@iconify/vue'
 import type { ModalProps } from '@/types'
 
 interface Props {

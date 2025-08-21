@@ -18,8 +18,8 @@
         <img 
           :src="images[images.length - 1].src" 
           :alt="images[images.length - 1].alt"
+          :data-index="images.length - 1"
           class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
-          @click="openModal(images[images.length - 1])"
           @load="onImageLoad"
           @error="onImageError"
         />
@@ -34,8 +34,8 @@
         <img 
           :src="image.src" 
           :alt="image.alt"
+          :data-index="index"
           class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
-          @click="openModal(image)"
           @load="onImageLoad"
           @error="onImageError"
         />
@@ -49,8 +49,8 @@
         <img 
           :src="images[0].src" 
           :alt="images[0].alt"
+          :data-index="0"
           class="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
-          @click="openModal(images[0])"
           @load="onImageLoad"
           @error="onImageError"
         />
@@ -138,6 +138,11 @@ const {
 const touchStartX = ref(0)
 const touchEndX = ref(0)
 const isDragging = ref(false)
+const touchStartTime = ref(0)
+const touchStartY = ref(0)
+const touchEndY = ref(0)
+const hasMoved = ref(false)
+const tapTimeout = ref<number | null>(null)
 
 // Infinite loop handling
 const isTransitioning = ref(false)
@@ -177,25 +182,70 @@ const handleGoTo = (index: number) => {
 }
 
 const handleTouchStart = (e: TouchEvent) => {
+  e.preventDefault() // Prevent default touch behavior
   touchStartX.value = e.touches[0].clientX
+  touchStartY.value = e.touches[0].clientY
+  touchStartTime.value = Date.now()
+  hasMoved.value = false
   isDragging.value = true
+  
+  // Clear any existing tap timeout
+  if (tapTimeout.value) {
+    clearTimeout(tapTimeout.value)
+    tapTimeout.value = null
+  }
 }
 
 const handleTouchMove = (e: TouchEvent) => {
   if (!isDragging.value) return
   
   e.preventDefault() // Prevent default touch behavior
-  touchEndX.value = e.touches[0].clientX
+  const currentX = e.touches[0].clientX
+  const currentY = e.touches[0].clientY
+  const diffX = Math.abs(currentX - touchStartX.value)
+  const diffY = Math.abs(currentY - touchStartY.value)
+  
+  // If moved more than 5px in any direction, mark as moved
+  if (diffX > 5 || diffY > 5) {
+    hasMoved.value = true
+    // Clear tap timeout if we've moved
+    if (tapTimeout.value) {
+      clearTimeout(tapTimeout.value)
+      tapTimeout.value = null
+    }
+  }
+  
+  touchEndX.value = currentX
+  touchEndY.value = currentY
 }
 
-const handleTouchEnd = () => {
+const handleTouchEnd = (e: TouchEvent) => {
   if (!isDragging.value) return
   
+  e.preventDefault() // Prevent default touch behavior
+  const touchEndTime = Date.now()
+  const touchDuration = touchEndTime - touchStartTime.value
   const swipeThreshold = 50
-  const diff = touchStartX.value - touchEndX.value
-
-  if (Math.abs(diff) > swipeThreshold) {
-    if (diff > 0) {
+  
+  const diffX = touchStartX.value - touchEndX.value
+  const diffY = touchStartY.value - touchEndY.value
+  
+  // If it's a quick tap with minimal movement, treat as tap
+  if (touchDuration < 200 && !hasMoved.value) {
+    // Simple approach: just open modal for the currently visible image
+    const currentVisibleImage = getCurrentVisibleImage()
+    if (currentVisibleImage) {
+      console.log('Opening modal for current visible image:', currentVisibleImage)
+      openModal(currentVisibleImage)
+    }
+    
+    isDragging.value = false
+    return
+  }
+  
+  // Handle swipe only if it's a horizontal swipe with sufficient distance
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
+    if (diffX > 0) {
       // Swipe left - next image
       handleNext()
     } else {
@@ -205,6 +255,32 @@ const handleTouchEnd = () => {
   }
   
   isDragging.value = false
+  hasMoved.value = false
+}
+
+// Helper function to get the currently visible image
+const getCurrentVisibleImage = () => {
+  if (props.images.length === 0) return null
+  
+  if (props.images.length === 1) {
+    return props.images[0]
+  }
+  
+  // Calculate which image is currently visible
+  let actualIndex: number
+  
+  if (currentIndex.value === 0) {
+    // At cloned last image, so showing last real image
+    actualIndex = props.images.length - 1
+  } else if (currentIndex.value === props.images.length + 1) {
+    // At cloned first image, so showing first real image
+    actualIndex = 0
+  } else {
+    // At a real image
+    actualIndex = currentIndex.value - 1
+  }
+  
+  return props.images[actualIndex]
 }
 
 const openModal = (image: CarouselImage) => {
