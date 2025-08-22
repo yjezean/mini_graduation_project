@@ -43,11 +43,28 @@ export const entries: Entry[] = [
     {
         id: '8',
         title: 'shan ying',
-        message: 'Hello, how are you',
+        message: '毕业快乐，祝你前程似锦，鹏程万里₍˄·͈༝·͈˄*₎◞ ̑̑',
     },
     {
         id: '9',
         title: 'jhiyao',
         message: 'bro, 毕业快乐',
     },
+    {
+        id: '10',
+        title: '阿程',
+        message: '毕业快乐 身体健康 事事顺利！',
+    },
+    {
+        id: '11',
+        title: 'Cheong Yu Heng',
+        message: 'Congrats. ',
+    },
+    {
+        id: '12',
+        title: 'Kahjun',
+        message: 'Happy Graduation!',
+    },
+    
+    
 ]
